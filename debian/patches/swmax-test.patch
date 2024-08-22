@@ -1,0 +1,94 @@
+commit 86a5627dbeac8d9d9bc34326a758d6a477e876e4
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Wed Sep 30 08:53:36 2020 +1000
+
+    test: replace the hardcoded EV_MAX array with the libevdev one
+    
+    Kernel 5.8 changed the value of SW_MAX but libevdev has a built-in check for
+    out-of-range bits (it silently discards those).
+    
+    So where evemu is built against a new kernel but a libevdev that hasn't been
+    updated yet, our test expects bit up to the new SW_MAX while libevdev
+    discards all bits above the old SW_MAX.
+    
+    Fix this by making sure the test and uses the same value of the
+    respective type max as evemu itself does.
+    
+    Fixes #3
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+--- a/test/Makefile.am
++++ b/test/Makefile.am
+@@ -11,8 +11,12 @@
+ test_cxx_compile_LDADD = $(top_builddir)/src/libevemu.la
+ 
+ test_evemu_create_SOURCES = test-evemu-create.c
+-test_evemu_create_LDADD = $(top_builddir)/src/libevemu.la
+-test_evemu_create_LDFLAGS = -static
++test_evemu_create_LDADD = \
++                         $(top_builddir)/src/libevemu.la \
++                         $(LIBEVDEV_LIBS) \
++                         $(NULL)
++test_evemu_create_LDFLAGS = -no-install
++test_evemu_create_CFLAGS = $(LIBEVDEV_CFLAGS)
+ endif
+ 
+ CLEANFILES = evemu.tmp.*
+--- a/test/test-evemu-create.c
++++ b/test/test-evemu-create.c
+@@ -10,6 +10,7 @@
+ #include <assert.h>
+ #include "evemu.h"
+ #include <linux/input.h>
++#include <libevdev/libevdev.h>
+ 
+ #define UNUSED __attribute__((unused))
+ 
+@@ -45,19 +46,6 @@
+ 	ALLFLAGS	 = (WITHNAME << 1) - 1
+ };
+ 
+-static int max[EV_CNT] = {
+-	0,	 /* EV_SYN */
+-	KEY_MAX, /* EV_KEY */
+-	REL_MAX, /* EV_REL */
+-	ABS_MAX, /* EV_ABS */
+-	MSC_MAX, /* EV_MSC */
+-	SW_MAX,  /* EV_SW */
+-	LED_MAX, /* EV_LED */
+-	SND_MAX, /* EV_SND */
+-	REP_MAX, /* EV_REP */
+-	FF_MAX   /* EV_FF */
+-};
+-
+ static void println(int fd, int flags, const char *format, ...)
+ {
+ 	va_list args;
+@@ -119,8 +107,8 @@
+ 	if (flags & BITS) {
+ 		int i;
+ 		for (i = 0; i < EV_CNT; i++) {
+-			int j;
+-			for (j = 0; j <= max[i]; j += 8) {
++			int max = libevdev_event_type_get_max(i);
++			for (int j = 0; j <= max; j += 8) {
+ 				println(fd, flags, bits, i, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
+ 				if (flags & EMPTYLINE)
+ 					println(fd, flags, "%s", emptyline);
+@@ -177,11 +165,14 @@
+ 	if (flags & BITS) {
+ 		int i, j;
+ 		for (i = 1; i < EV_CNT; i++) {
++			int max = libevdev_event_type_get_max(i);
++
+ 			if (!evemu_has_bit(dev, i))
+ 				continue;
+ 
+-			for (j = 0; j <= max[i]; j++)
++			for (j = 0; j <= max; j++) {
+ 				assert(evemu_has_event(dev, i, j));
++			}
+ 		}
+ 	}
+ 

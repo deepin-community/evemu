@@ -1,0 +1,45 @@
+commit fd204f628021c9bb13870a8c983d9c63e1a53ebb
+Author: Fabrice Fontaine <fontaine.fabrice@gmail.com>
+Date:   Mon Mar 23 11:04:11 2020 +0100
+
+    src/evemu.c: fix build with kernels >= 4.16
+    
+    Commit 30973c0b forgot to update all occurences of input_event, this
+    will result in the following build failure with kernel >= 4.16:
+    
+    evemu.c: In function 'write_event_desc':
+    evemu.c:753:23: error: 'const struct input_event' has no member named 'time'; did you mean 'type'?
+        time = millis(&ev->time);
+                           ^~~~
+                           type
+    
+    Fixes:
+     - http://autobuild.buildroot.org/results/487dd5056ec0a977d55b23417d5db2664dcc91fa
+    
+    Signed-off-by: Fabrice Fontaine <fontaine.fabrice@gmail.com>
+
+diff --git a/src/evemu.c b/src/evemu.c
+index c7ff561..42dbe1d 100644
+--- a/src/evemu.c
++++ b/src/evemu.c
+@@ -733,11 +733,6 @@ out:
+ 	return rc;
+ }
+ 
+-static inline unsigned long millis(const struct timeval *tv)
+-{
+-	return tv->tv_sec * 1000 + tv->tv_usec/1000;
+-}
+-
+ static int write_event_desc(FILE *fp, const struct input_event *ev)
+ {
+ 	int rc;
+@@ -750,7 +745,7 @@ static int write_event_desc(FILE *fp, const struct input_event *ev)
+ 				     libevdev_event_code_get_name(ev->type, ev->code),
+ 				     ev->value);
+ 		} else {
+-			time = millis(&ev->time);
++			time = ev->input_event_sec * 1000 + ev->input_event_usec/1000;
+ 			dt = time - last_ms;
+ 			last_ms = time;
+ 			rc = fprintf(fp, "# ------------ %s (%d) ---------- %+ldms\n",

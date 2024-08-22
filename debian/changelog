@@ -1,5 +1,193 @@
-template-repository (1.0-1) unstable; urgency=medium
+evemu (2.7.0-4) unstable; urgency=medium
 
-  * Initial release
+  [ Debian Janitor ]
+  * Set upstream metadata fields: Repository, Repository-Browse.
+  * Drop unnecessary dependency on dh-autoreconf.
+  * Remove constraints unnecessary since buster (oldstable):
+    + Build-Depends: Drop versioned constraint on libevdev-dev.
 
- -- Tsic404 <liuheng@deepin.org>  Sat, 28 Jan 2023 13:46:49 +0800
+  [ Atlas Yu ]
+  * Update upstream metadata fields: Repository, Repository-Browse.
+
+  [ Stephen Kitt ]
+  * Standards-Version 4.6.2, no change required.
+  * Add upstream patches to support building with 64-bit time_t on 32-
+    bit platforms.
+  * Update upstream source in debian/copyright.
+  * Update debian/watch to version 4.
+
+ -- Stephen Kitt <skitt@debian.org>  Sun, 03 Mar 2024 10:44:29 +0100
+
+evemu (2.7.0-3.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Rename libraries for 64-bit time_t transition.  Closes: #1062539
+
+ -- Michael Hudson-Doyle <mwhudson@debian.org>  Wed, 28 Feb 2024 03:43:47 +0000
+
+evemu (2.7.0-3) unstable; urgency=medium
+
+  * Apply upstream fix for the tests. Closes: #971161.
+  * Switch to debhelper compatibility level 13.
+
+ -- Stephen Kitt <skitt@debian.org>  Wed, 30 Sep 2020 14:29:19 +0200
+
+evemu (2.7.0-2) unstable; urgency=medium
+
+  [ Ondřej Nový ]
+  * d/copyright: Change Format URL to correct one
+
+  [ Stephen Kitt ]
+  * Simplify libevemu3.symbols, add Build-Depends-Package.
+  * Drop Python 2 support. Closes: #936491.
+  * Switch to debhelper compatibility level 12.
+  * Set “Rules-Requires-Root: no”.
+  * Standards-Version 4.4.0, no further change required.
+
+ -- Stephen Kitt <skitt@debian.org>  Fri, 30 Aug 2019 12:17:10 +0200
+
+evemu (2.7.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * New maintainer. Closes: #899326.
+  * Add missing build-dependency on dh-python.
+  * Clean up the build properly to allow building several times in a
+    row.
+  * Move evemu-tools to section “utils”.
+  * Drop X-Python-Version, the minimum version is satisfied everywhere.
+  * Update upstream URLs.
+  * Migrate to Salsa.
+  * Enable all hardening options.
+  * Standards-Version 4.1.4, no further change required.
+
+ -- Stephen Kitt <skitt@debian.org>  Sat, 26 May 2018 21:01:16 +0200
+
+evemu (2.6.0-0.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Fix debian/watch and add upstream signature verification.
+  * New upstream release (closes: #834694)
+  * Update 0003-fix-python-startup-crash.patch to actually do something
+    useful, and extend it to also 1) not hardcode libc's SONAME, and 2) use
+    libevdev's current SONAME rather than loading the .so symlink which may or
+    may not be available.
+  * Add dependency on libevdev2 from the python*-evemu packages since we
+    dlopen it.
+
+ -- Julien Cristau <jcristau@debian.org>  Thu, 15 Dec 2016 08:17:34 +0100
+
+evemu (2.1.0-1) unstable; urgency=low
+
+  * new upstream release (closes: #787586)
+  * debian/patches/0002-check-test-conditions.patch: refreshed
+  * debian/patches/0004-out-of-source-compile.patch: removed
+  * debian/patches/0005-python3-raise-syntax.patch: removed
+  * debian/control: added Build-Depends on libevdev-dev
+    - updated to Standards-Version 3.9.6 (no changes required)
+    - bumped package names to match new SONAME
+
+ -- Stephen M. Webb <stephen.webb@bregmasoft.ca>  Wed, 03 Jun 2015 14:16:24 -0400
+
+evemu (1.2.0-2) unstable; urgency=low
+
+  * update Python3 build-dependency (closes: #741826)
+
+ -- Stephen M. Webb <stephen.webb@bregmasoft.ca>  Mon, 21 Apr 2014 09:54:11 -0400
+
+evemu (1.2.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * debian/patches/0001-add-evemu-event-manpage.patch: removed
+  * debian/control: un-forced Python3 version
+    - updated to Standards-Version 3.9.5 (no changes)
+  * debian/python3-evemu: fixed paths
+  * debian/patches/0005-python3-raise-syntax.patch:
+    - fix exception raise syntax for Python3 (closes: #706155)
+  * debian/libevemu1.symbols: added new symbols
+  * debian/copyright: added new maintainers
+
+ -- Stephen M. Webb <stephen.webb@bregmasoft.ca>  Thu, 12 Dec 2013 19:12:23 -0500
+
+evemu (1.0.10-1) experimental; urgency=low
+
+  * initial Debian package (closes: #663877)
+  * changed upstream source location and package name
+  * New upstream release.
+  * debian/control: updated Standards-Version to 3.9.4 (no changes required)
+  * debian/patches/0001-add-evemu-event-manpage.patch: manpage fix from upstream
+  * debian/patches/0002-check-test-conditions.patch: disable unrunnable unit
+    tests
+  * debian/patches/0003-fix-python-startup-crash.patch: fix a crash in python
+    bindings due to incorrect search string
+  * debian/patches/0004-out-of-source-compile.patch: fix out-of-source builds
+
+ -- Stephen M. Webb <stephen.webb@bregmasoft.ca>  Tue, 19 Feb 2013 14:00:29 -0500
+
+utouch-evemu (1.0.9-1) precise; urgency=low
+
+  * debian/copyright: changed Format to URL of official format
+  * debian/control: updated Standards-Version to 3.9.3 (no changes required)
+  * removed udeb binary package
+  * debian/control: moved python-utouch-evemu into Python section
+  * updated to debhelper compat level 9
+    - added multi-arch support
+  * New upstream release.
+    - fixes C++ compile problems (lp: #771763)
+    - fixes node search problems (lp: #735614)
+    - change library license to LGPLv3 (lp: #963167)
+
+ -- Stephen M. Webb <stephen.webb@bregmasoft.ca>  Sat, 24 Mar 2012 15:48:43 -0400
+
+utouch-evemu (1.0.8-0ubuntu1) precise; urgency=low
+
+  * Restored required autoreconf invocation.
+  * Ran control file through wrap-and-sort.
+  * Enriched package descriptions to silence lintian warnings.
+  * New upstream release.
+    - added python bindings (LP: #731678).
+    - fixed buffer overflow (LP: #884848).
+  * Converted to dh packaging.
+
+ -- Stephen M. Webb <stephen.webb@canonical.com>  Thu, 01 Dec 2011 07:18:23 -0500
+
+utouch-evemu (1.0.7-0ubuntu1) precise; urgency=low
+
+  * New upstream release.
+    - Fix corrupted recordings when terminated
+  * Bump lintian standards to 3.9.2
+  * Removed unnecessary autoreconf invocation
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Sun, 30 Oct 2011 14:40:55 -0700
+
+utouch-evemu (1.0.5-0ubuntu1) natty; urgency=low
+
+  [ Henrik Rydberg ]
+  * New upstream release.
+  * Add the new functions to the symbols file
+  * Feature freeze exception LP: #735558
+
+ -- Chase Douglas <chase.douglas@ubuntu.com>  Wed, 16 Mar 2011 16:02:44 -0400
+
+utouch-evemu (1.0.4-0ubuntu1) natty; urgency=low
+
+  [ Henrik Rydberg ]
+  * New upstream release.
+  * Install man pages for utouch-evemu-tools.
+
+  [ Stephen M. Webb ]
+  * Added GPL-3 licensing to source files.
+  * Fixed debian/copyright format.
+  * Removed breaks: from debian/control.
+
+ -- Stephen M. Webb <stephen.webb@canonical.com>  Thu, 03 Feb 2011 12:51:21 -0500
+
+utouch-evemu (1.0.3-0ubuntu2) natty; urgency=low
+
+  * Initial load of upstream version utouch-evemu-1.0.0
+  * Initial debian directory for utouch-evemu.
+  * New upstream release utouch-evemu-1.0.2.
+  * New upstream release utouch-evemu-1.0.3.
+  * Fix exported symbols list
+  * Fix package descriptions.
+
+ -- Henrik Rydberg <rydberg@bitmath.org>  Mon, 03 Jan 2011 17:41:55 +0100
