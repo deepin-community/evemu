@@ -1,0 +1,4 @@
+usr/include
+usr/lib/*/libevemu.a
+usr/lib/*/libevemu.so
+usr/lib/*/pkgconfig

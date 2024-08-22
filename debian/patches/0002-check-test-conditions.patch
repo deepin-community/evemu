@@ -1,0 +1,31 @@
+Description: add a check if conditions exist for running self-test suite
+ The self-tests are designed for a full Linux runtime, which does not exist in a
+ pbuild or sbuild chroot (missing device files).  Those tests need to be
+ skipped at package build time.
+Author: Stephen M. Webb <stephen.webb@canonical.com>
+
+=== modified file 'configure.ac'
+--- a/configure.ac
++++ b/configure.ac
+@@ -66,6 +66,9 @@
+ 
+ AM_CONDITIONAL(BUILD_TESTS, [test "x$enable_tests" = "xyes"])
+ 
++# required self-test conditions
++AM_CONDITIONAL([HAVE_DEV_INPUT], [test -d /dev/input -a -w /dev/input])
++
+ AC_SUBST(AM_CFLAGS,
+          "-Wall -Wextra")
+ 
+--- a/python/Makefile.am
++++ b/python/Makefile.am
+@@ -36,7 +36,9 @@
+ 	       evemu/tests/test_device.py
+ 
+ if BUILD_TESTS
++if HAVE_DEV_INPUT
+ check_SCRIPTS = evemu-test-runner
++endif
+ 
+ TESTS = $(check_SCRIPTS)
+ 
