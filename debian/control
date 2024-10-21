@@ -16,10 +16,7 @@ Vcs-Browser: https://salsa.debian.org/debian/evemu
 Vcs-Git: https://salsa.debian.org/debian/evemu.git
 Rules-Requires-Root: no
 
-Package: libevemu3t64
-Provides: ${t64:Provides}
-Replaces: libevemu3
-Breaks: libevemu3 (<< ${source:Version})
+Package: libevemu3
 Architecture: linux-any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
@@ -35,7 +32,7 @@ Section: python
 Architecture: linux-any
 Multi-Arch: allowed
 Pre-Depends: ${misc:Pre-Depends}
-Depends: libevemu3t64 (= ${binary:Version}),
+Depends: libevemu3 (= ${binary:Version}),
          libevdev2,
          ${misc:Depends},
          ${python3:Depends},
@@ -52,7 +49,7 @@ Section: libdevel
 Architecture: linux-any
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
-Depends: libevemu3t64 (= ${binary:Version}),
+Depends: libevemu3 (= ${binary:Version}),
          ${misc:Depends}
 Description: Linux Input Event Device Emulation Library - development files
  The evemu library and tools are used to describe devices, record data,
@@ -65,7 +62,7 @@ Package: evemu-tools
 Section: utils
 Architecture: linux-any
 Pre-Depends: ${misc:Pre-Depends}
-Depends: libevemu3t64 (= ${binary:Version}),
+Depends: libevemu3 (= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Description: Linux Input Event Device Emulation Library - test tools
